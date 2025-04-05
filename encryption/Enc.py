@@ -13,7 +13,7 @@ history = []
 
 # AES Encryption & Decryption
 def hash_password(password: str) -> bytes:
-    return hashlib.sha256(password.encode()).digest()
+    return hashlib.sha256(password.encode()).digest() #github test 1
 
 def encrypt_aes(data, key):
     cipher = AES.new(key, AES.MODE_CBC)
