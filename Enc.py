@@ -32,7 +32,7 @@ def verify_password(file_path, password):
     stored_password = keyring.get_password("SecureFileEncryption", file_path)
     return stored_password is not None and stored_password == password
 
-# File Encryption & Decryption
+# File Encryption
 def encrypt_file(file_path, password):
     key = hash_password(password)
     try:
@@ -42,12 +42,14 @@ def encrypt_file(file_path, password):
         new_file_path = file_path + ".enc"
         with open(new_file_path, 'wb') as f:
             f.write(ciphertext)
+        os.remove(file_path)  # Delete original
         store_password(new_file_path, password)
         history.append(new_file_path)
-        update_status("File encrypted successfully!", "success")
+        update_status("File encrypted!", "success")
     except Exception as e:
         update_status(f"Error: {str(e)}", "danger")
 
+# File Decryption
 def decrypt_file(file_path, password):
     if not verify_password(file_path, password):
         update_status("Incorrect password!", "danger")
@@ -57,15 +59,13 @@ def decrypt_file(file_path, password):
         with open(file_path, 'rb') as f:
             ciphertext = f.read()
         plaintext = decrypt_aes(ciphertext, key)
-        base = file_path[:-4]  # remove ".enc"
-        root_name, ext = os.path.splitext(base)
-        base = file_path[:-4]  # remove ".enc"
-        new_file_path = base  # restore original file name with extension
-
+        base = file_path[:-4]  # Remove ".enc"
+        new_file_path = base
         with open(new_file_path, 'wb') as f:
             f.write(plaintext)
+        os.remove(file_path)  # Delete .enc file
         history.append(new_file_path)
-        update_status("File decrypted successfully!", "success")
+        update_status("File decrypted!", "success")
     except Exception as e:
         update_status(f"Error: {str(e)}", "danger")
 
@@ -119,6 +119,7 @@ def password_entry_window(action_callback, confirm=False):
 
     ttk.Button(password_window, text="Submit", command=submit_password).pack(pady=10)
 
+# GUI Action Wrappers
 def select_file_encrypt():
     file_path = filedialog.askopenfilename()
     if file_path:
