@@ -13,7 +13,7 @@ history = []
 
 # AES Encryption & Decryption
 def hash_password(password: str) -> bytes:
-    return hashlib.sha256(password.encode()).digest() 
+    return hashlib.sha256(password.encode()).digest()
 
 def encrypt_aes(data, key):
     cipher = AES.new(key, AES.MODE_CBC)
@@ -57,7 +57,11 @@ def decrypt_file(file_path, password):
         with open(file_path, 'rb') as f:
             ciphertext = f.read()
         plaintext = decrypt_aes(ciphertext, key)
-        new_file_path = file_path.replace(".enc", "_decrypted")
+        base = file_path[:-4]  
+        root_name, ext = os.path.splitext(base)
+        base = file_path[:-4]  
+        new_file_path = base  # restore original file name with extension
+
         with open(new_file_path, 'wb') as f:
             f.write(plaintext)
         history.append(new_file_path)
@@ -78,7 +82,7 @@ def password_entry_window(action_callback, confirm=False):
     password_window.title("Enter Password")
     password_window.geometry("400x300")
     password_window.configure(bg="#2C3E50")
-    
+
     password_var = ttk.StringVar()
     confirm_password_var = ttk.StringVar()
     show_password_var = ttk.BooleanVar()
@@ -86,20 +90,20 @@ def password_entry_window(action_callback, confirm=False):
     ttk.Label(password_window, text="Enter Password:", foreground="white", background="#2C3E50").pack(pady=5)
     password_entry = ttk.Entry(password_window, textvariable=password_var, show='*')
     password_entry.pack(pady=5)
-    
+
     if confirm:
         ttk.Label(password_window, text="Confirm Password:", foreground="white", background="#2C3E50").pack(pady=5)
         confirm_password_entry = ttk.Entry(password_window, textvariable=confirm_password_var, show='*')
         confirm_password_entry.pack(pady=5)
-    
+
     def toggle_password():
         show = '' if show_password_var.get() else '*'
         password_entry.config(show=show)
         if confirm:
             confirm_password_entry.config(show=show)
-    
+
     ttk.Checkbutton(password_window, text="Show Password", variable=show_password_var, command=toggle_password).pack()
-    
+
     def submit_password():
         password = password_var.get()
         if confirm:
@@ -112,7 +116,7 @@ def password_entry_window(action_callback, confirm=False):
                 return
         action_callback(password)
         password_window.destroy()
-    
+
     ttk.Button(password_window, text="Submit", command=submit_password).pack(pady=10)
 
 def select_file_encrypt():
