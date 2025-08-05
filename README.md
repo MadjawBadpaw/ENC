@@ -22,6 +22,12 @@ This project allows users to encrypt and decrypt files securely, validate strong
 - **[TTKBootstrap](https://github.com/israel-dryer/ttkbootstrap)** (modern tkinter UI framework)  
 - **[PyCryptodome](https://pycryptodome.readthedocs.io/)** (AES encryption)  
 - **[Keyring](https://pypi.org/project/keyring/)** (secure password storage)  
-- **Tkinter (file dialogs, GUI windows)**  
+- **Tkinter (file dialogs, GUI windows)**
+
+  
+⚠️ Disclaimer
+This tool is built for educational and personal use only.
+Do NOT use it for illegal purposes. The author is not responsible for misuse.
+
 
 
